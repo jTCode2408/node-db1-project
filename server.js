@@ -13,7 +13,7 @@ server.get('/', (req,res)=>{
     res.send(`Routing with DB logic`)
 })
 
-//CRUD ops for accounts
+
 
 
 
