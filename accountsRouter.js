@@ -4,7 +4,7 @@ const db = require('./data/dbConfig');
 
 const router = express.Router();
 
-router.use(express.json());
+// router.use(express.json());
 //CRUD ops for accounts using db logic
  //get all accounts
  router.get('/', (req,res)=>{
@@ -20,7 +20,7 @@ router.use(express.json());
  //get account by id
  router.get('/:id', (req, res)=>{
      const {id} = req.params;
-db('accoutns').where({id})
+db('accounts').where({id})
 .then( account=>{
 if(account.length){
     res.status(200).json(account)
@@ -37,6 +37,17 @@ if(account.length){
  //edit accounts(put)
  //delete account
  //add account(post)
+ router.post('/', (req,res)=>{
+     db('accounts').insert(req.body)
+     .then(newAccount=>{
+         res.status(201).json(newAccount)
+     })
+     .catch(err=>{
+         console.log(err)
+         res.status(500).json({error:"could not add account"})
+     })
+ })
+
 
 
 
