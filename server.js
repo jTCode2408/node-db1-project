@@ -4,7 +4,7 @@ const AccountsRouter = require ('./accounts/accountsRouter.js');
 const server = express();
 
 server.use(express.json());
-server.use('/accounts', AccountsRouter)
+server.use('/api/accounts', AccountsRouter)
 
 server.get('/', (req,res)=>{
     console.log('server starting')

@@ -4,9 +4,9 @@ const db = require('../data/dbConfig.js');
 
 const router = express.Router();
 
-// router.use(express.json());
+router.use(express.json());
 //CRUD ops for accounts using db logic
- //get all accounts
+//get all accounts
  router.get('/', (req,res)=>{
     db("accounts")
     .then(accounts=>{
@@ -17,6 +17,7 @@ const router = express.Router();
         res.status(500).json({error:"error getting accounts"});
     });
  });
+
  //get account by id
  router.get('/:id', (req, res)=>{
 db("accounts").where({id: req.params.id})
@@ -35,12 +36,12 @@ if(account.length){
 
  //edit accounts(put)
  router.put('/:id', (req,res)=>{
-     const {id} = req.params.id;
+     const {id} = req.params;
      db("accounts").where({id})
      .update(req.body)
      .then( edit=>{
-         if(edit.length){
-             res.status(200).json(edit)
+         if(edit){
+             res.status(200).json({edited: req.body})
          }else{
              res.status(400).json({error:"account with specified ID not found"})
          }
@@ -52,11 +53,11 @@ if(account.length){
  })
  //delete account
  router.delete('/:id', (req,res)=>{
-     const {id}=req.params.id;
+     const {id}=req.params;
     db("accounts").where({id}).del()
     .then(deleting =>{
-        if(deleting.length){
-            res.status(200).json(deleting)
+        if(deleting){
+            res.status(200).json(`deleted ${deleting} account with id number ${id}`)
         } else{
             res.status(400).json({error:"account with specified ID not found"})
         }
@@ -70,8 +71,8 @@ if(account.length){
  //add account(post)
  router.post('/', (req,res)=>{
      db("accounts").insert(req.body, 'id')// tells db to return ID of record id
-     .then(newAccount=>{
-         res.status(201).json(newAccount)
+     .then(adding=>{
+         res.status(201).json({adding: req.body})
      })
      .catch(err=>{
          console.log(err)
