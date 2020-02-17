@@ -1,6 +1,6 @@
 const express = require('express');
 
-const db = require('./data/dbConfig');
+const db = require('../data/dbConfig.js');
 
 const router = express.Router();
 
@@ -8,7 +8,7 @@ const router = express.Router();
 //CRUD ops for accounts using db logic
  //get all accounts
  router.get('/', (req,res)=>{
-    db('accounts')
+    db("accounts")
     .then(accounts=>{
         res.status(200).json(accounts);
     })
@@ -19,12 +19,11 @@ const router = express.Router();
  });
  //get account by id
  router.get('/:id', (req, res)=>{
-     const {id} = req.params;
-db('accounts').where({id})
+db("accounts").where({id: req.params.id})
 .then( account=>{
 if(account.length){
     res.status(200).json(account)
-} else{
+} else {
     res.status(404).json({error:"account with specified ID not found"})
 }
 })
@@ -36,12 +35,12 @@ if(account.length){
 
  //edit accounts(put)
  router.put('/:id', (req,res)=>{
-     const {id} = req.params;
-     db('accounts').where({id})
-     .update(accounts.name, accounts.budget)
+     const {id} = req.params.id;
+     db("accounts").where({id})
+     .update(req.body)
      .then( edit=>{
          if(edit.length){
-             res.status(201).json(edit)
+             res.status(200).json(edit)
          }else{
              res.status(400).json({error:"account with specified ID not found"})
          }
@@ -53,8 +52,8 @@ if(account.length){
  })
  //delete account
  router.delete('/:id', (req,res)=>{
-     const {id}=req.params;
-    db('accounts').where({id}).del()
+     const {id}=req.params.id;
+    db("accounts").where({id}).del()
     .then(deleting =>{
         if(deleting.length){
             res.status(200).json(deleting)
@@ -70,7 +69,7 @@ if(account.length){
 
  //add account(post)
  router.post('/', (req,res)=>{
-     db('accounts').insert(accounts.name, accounts.budget)
+     db("accounts").insert(req.body, 'id')// tells db to return ID of record id
      .then(newAccount=>{
          res.status(201).json(newAccount)
      })
@@ -79,11 +78,6 @@ if(account.length){
          res.status(500).json({error:"could not add account"})
      })
  })
-
-
-
-
-
 
 
 module.exports = router;
